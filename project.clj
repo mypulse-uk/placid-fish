@@ -7,6 +7,16 @@
 
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.bovinegenius/exploding-fish "0.3.6"]]
+
+  :plugins [[lein-cloverage "1.2.3"]
+            [lein-shell "0.5.0"]
+            [lein-ancient "0.7.0"]
+            [lein-changelog "0.3.2"]
+            [lein-eftest "0.5.9"]
+            [lein-codox "0.10.8"]
+            [lein-kibit "0.1.8"]
+            [lein-bikeshed "0.5.2"]]
+
   :main ^:skip-aot placid-fish.core
 
   :profiles

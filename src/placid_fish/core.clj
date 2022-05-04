@@ -1,6 +1,7 @@
 (ns placid-fish.core
-  (:require [org.bovinegenius.exploding-fish :as ef]
-            [clojure.string :as str]))
+  (:require
+    [clojure.string :as str]
+    [org.bovinegenius.exploding-fish :as ef]))
 
 (defn absolute?
   [uri]

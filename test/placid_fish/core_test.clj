@@ -1,6 +1,7 @@
 (ns placid-fish.core-test
-  (:require [clojure.test :refer :all]
-            [placid-fish.core :refer :all]))
+  (:require
+    [clojure.test :refer :all]
+    [placid-fish.core :refer :all]))
 
 (deftest absolute-should-not-throw
   (testing "absolute? should not throw"
