@@ -5,7 +5,7 @@
   :license {:name "The MIT License"
             :url "https://opensource.org/licenses/MIT"}
 
-  :dependencies [[org.clojure/clojure "1.10.0"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.bovinegenius/exploding-fish "0.3.6"]]
 
   :plugins [[lein-cloverage "1.2.3"]
@@ -17,14 +17,9 @@
             [lein-kibit "0.1.8"]
             [lein-bikeshed "0.5.2"]]
 
-  :main ^:skip-aot placid-fish.core
-
   :profiles
   {:shared {:dependencies
             [[org.clojure/clojure "1.11.1"]
-             [ring/ring-mock "0.4.0"]
-             [clj-time "0.15.2"]
-             [faker "0.3.2"]
              [eftest "0.5.9"]]}
    :dev [:shared {:source-paths ["dev"]
                   :eftest {:multithread? false}}]
