@@ -12,3 +12,13 @@
   [^CharSequence s ^String substr]
   (try (str/ends-with? s substr)
        (catch Exception _)))
+
+(defn path
+  [uri]
+  (try (ef/path uri)
+       (catch Exception _)))
+
+(defn query-map
+  [uri]
+  (try (ef/query-map uri)
+       (catch Exception _)))
