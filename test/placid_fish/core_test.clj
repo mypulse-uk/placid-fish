@@ -1,7 +1,8 @@
 (ns placid-fish.core-test
   (:require
     [clojure.test :refer [deftest is testing]]
-    [placid-fish.core :refer [absolute? path ends-with? query-map]]))
+    [placid-fish.core :refer
+     [absolute? path ends-with? query-map params query without-query]]))
 
 (deftest absolute-should-not-throw
   (testing "absolute? should not throw"
@@ -35,3 +36,25 @@
       (is (query-map "https://example.com?foo=bar")))
     (testing "with nil"
       (is (nil? (query-map nil))))))
+
+(deftest params-should-not-throw
+  (testing "params should not throw"
+    (testing "with valid data"
+      (is (params "https://example.com?foo=bar" "foo")))
+    (testing "with nil"
+      (is (nil? (params nil nil))))))
+
+(deftest query-should-not-throw
+  (testing "query should not throw"
+    (testing "with valid data"
+      (is (query "https://example.com" nil))
+      (is (query "https://example.com?foo=bar" "?test=param")))
+    (testing "with nil"
+      (is (nil? (query nil nil))))))
+
+(deftest without-query-removes-query-string
+  (testing "without-query removes query string"
+    (testing "with valid data"
+      (is (= (without-query "https://example.com?foo=bar") "https://example.com")))
+    (testing "with nil"
+      (is (nil? (without-query nil))))))

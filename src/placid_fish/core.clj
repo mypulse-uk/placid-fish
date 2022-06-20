@@ -22,3 +22,18 @@
   [uri]
   (try (ef/query-map uri)
        (catch Exception _)))
+
+(defn params
+  [uri param-key]
+  (try (ef/params uri param-key)
+       (catch Exception _)))
+
+(defn query
+  [uri new-query]
+  (try (ef/query uri new-query)
+       (catch Exception _)))
+
+(defn without-query
+  [uri]
+  (try (ef/query uri nil)
+       (catch Exception _)))
