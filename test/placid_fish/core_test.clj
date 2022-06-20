@@ -40,9 +40,11 @@
 (deftest params-should-not-throw
   (testing "params should not throw"
     (testing "with valid data"
-      (is (params "https://example.com?foo=bar" "foo")))
+      (is (params "https://example.com?foo=bar" "foo"))
+      (is (params "https://example.com?foo=bar")))
     (testing "with nil"
-      (is (nil? (params nil nil))))))
+      (is (nil? (params nil nil)))
+      (is (nil? (params nil))))))
 
 (deftest query-should-not-throw
   (testing "query should not throw"

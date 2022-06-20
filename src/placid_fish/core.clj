@@ -24,9 +24,12 @@
        (catch Exception _)))
 
 (defn params
-  [uri param-key]
-  (try (ef/params uri param-key)
-       (catch Exception _)))
+  ([uri]
+   (try (ef/params uri)
+        (catch Exception _)))
+  ([uri param-key]
+   (try (ef/params uri param-key)
+        (catch Exception _))))
 
 (defn query
   [uri new-query]
