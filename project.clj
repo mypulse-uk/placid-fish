@@ -1,4 +1,4 @@
-(defproject ai.mypulse/placid-fish "0.1.3-RC1"
+(defproject ai.mypulse/placid-fish "0.1.3-RC2"
   :description "Safe url assertions for test classes that uses Exploding Fish under the hood"
   :url "https://github.com/Global-Online-Health/placid-fish"
 
