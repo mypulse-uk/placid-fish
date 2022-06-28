@@ -3,6 +3,19 @@
 Safe url assertions for test classes that uses 
 [Exploding fish](https://github.com/wtetzner/exploding-fish) under the hood
 
+## Examples
+
+```clojure
+(ns example.namespace
+  (:require
+    [clojure.test :refer [deftest is testing]]
+    [placid-fish.core :as uris]))
+
+(deftest an-example-test 
+  (testing "some placid fish examples" 
+    (is (uris/absolute? nil)))) ;; returns false instead of exception
+```
+
 ## License
 
 Copyright © 2022
