@@ -2,7 +2,6 @@ platform: linux
 
 inputs:
   - name: source
-  - name: version
 outputs:
   - name: test-logs
 

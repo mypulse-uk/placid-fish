@@ -3,7 +3,6 @@ platform: linux
 inputs:
   - name: source
   - name: dist
-  - name: version
 outputs:
   - name: image-build-directory
 run:

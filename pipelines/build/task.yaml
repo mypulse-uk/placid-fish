@@ -3,7 +3,6 @@ platform: linux
 
 inputs:
   - name: source
-  - name: version
 outputs:
   - name: dist
 run:
