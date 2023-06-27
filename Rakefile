@@ -1,117 +1,41 @@
 # frozen_string_literal: true
 
-require 'rake_circle_ci'
-require 'rake_github'
-require 'rake_gpg'
 require 'rake_leiningen'
-require 'rake_ssh'
+require 'rake_terraform'
+require 'rake_vault'
+require 'vault'
 require 'yaml'
+require 'rake_fly'
 
 require_relative 'lib/leiningen_task_set'
 
 task default: %i[library:check library:test:unit]
 
+RakeFly.define_installation_tasks(version: '7.9.0')
+
 RakeLeiningen.define_installation_tasks(
-  version: '2.9.6'
+  version: '2.10.0'
 )
 
-namespace :encryption do
-  namespace :directory do
-    desc 'Ensure CI secrets directory exists'
-    task :ensure do
-      FileUtils.mkdir_p('config/secrets/ci')
-    end
-  end
+RakeVault.define_installation_tasks(
+  path: File.join(Dir.pwd, 'vendor', 'vault'),
+  version: '1.11.2'
+)
 
-  namespace :passphrase do
-    desc 'Generate encryption passphrase for CI GPG key'
-    task generate: ['directory:ensure'] do
-      File.open('config/secrets/ci/encryption.passphrase', 'w') do |f|
-        f.write(SecureRandom.base64(36))
-      end
-    end
-  end
-end
-
-namespace :keys do
-  namespace :deploy do
-    RakeSSH.define_key_tasks(
-      path: 'config/secrets/ci/',
-      comment: 'devs@mypulse.ai'
-    )
-  end
-
-  namespace :secrets do
-    namespace :gpg do
-      RakeGPG.define_generate_key_task(
-        output_directory: 'config/secrets/ci',
-        name_prefix: 'gpg',
-        owner_name: 'MyPulse Maintainers',
-        owner_email: 'devs@mypulse.ai',
-        owner_comment: 'placid-fish CI Key'
-      )
-    end
-
-    task generate: ['gpg:generate']
+namespace :vault do
+  RakeVault.define_login_task(
+    argument_names: [:role, :address],
+  ) do |t, args|
+    t.address = args[:address]
+    t.role = args[:role] || 'read-only'
   end
 end
 
 namespace :secrets do
-  desc 'Regenerate all secrets'
-  task regenerate: %w[
-    encryption:passphrase:generate
-    keys:deploy:generate
-    keys:secrets:generate
-  ]
-end
-
-RakeCircleCI.define_project_tasks(
-  namespace: :circle_ci,
-  project_slug: 'github/Global-Online-Health/placid-fish'
-) do |t|
-  circle_ci_config =
-    YAML.load_file('config/secrets/circle_ci/config.yaml')
-
-  t.api_token = circle_ci_config["circle_ci_api_token"]
-  t.environment_variables = {
-    ENCRYPTION_PASSPHRASE:
-      File.read('config/secrets/ci/encryption.passphrase')
-          .chomp
-  }
-  t.checkout_keys = []
-  t.ssh_keys = [
-    {
-      hostname: 'github.com',
-      private_key: File.read('config/secrets/ci/ssh.private')
-    }
-  ]
-end
-
-RakeGithub.define_repository_tasks(
-  namespace: :github,
-  repository: 'Global-Online-Health/placid-fish',
-  ) do |t|
-  github_config =
-    YAML.load_file('config/secrets/github/config.yaml')
-
-  t.access_token = github_config['github_personal_access_token']
-  t.deploy_keys = [
-    {
-      title: 'CircleCI',
-      public_key: File.read('config/secrets/ci/ssh.public')
-    }
-  ]
-end
-
-namespace :pipeline do
-  desc 'Prepare CircleCI Pipeline'
-  task prepare: %i[
-    circle_ci:project:follow
-    circle_ci:env_vars:ensure
-    circle_ci:checkout_keys:ensure
-    circle_ci:ssh_keys:ensure
-    github:deploy_keys:ensure
-  ]
+  task :provision, [:vault_address] do |t, args|
+    Rake::Task["vault:login"].invoke('kv-admin', args[:vault_address])
+    provision_secrets(args[:vault_address])
+  end
 end
 
 namespace :library do
@@ -125,6 +49,13 @@ namespace :library do
   end
 
   namespace :publish do
+
+    task :prepare, [:vault_address] do |t, args|
+      Rake::Task["vault:login"].invoke('read-only', args[:vault_address])
+      content = vault_client.kv('kv').read("#{vault_base_path}/clojars-deploy-gpg")
+      File.write(File.expand_path('~/.lein/credentials.clj.gpg'), content)
+    end
+
     RakeLeiningen.define_release_task(
       name: :prerelease,
       profile: 'prerelease')
@@ -161,4 +92,43 @@ namespace :library do
   task :idiomise do
     puts 'skipping idiomise...'
   end
+end
+
+namespace :ci do
+  RakeFly.define_project_tasks(
+    pipeline: 'placid-fish',
+    argument_names: [:concourse_url],
+    backend: RakeFly::Tasks::Authentication::Login::FlyBackend
+  ) do |t, args|
+
+    t.concourse_url = args[:concourse_url]
+    t.config = "pipelines/pipeline.yaml"
+    t.non_interactive = true
+    t.home_directory = 'build/fly'
+  end
+end
+
+def provision_secrets(vault_address)
+  token = File.read(File.expand_path('~/.vault-token'))
+  vault_client = Vault::Client.new(address: vault_address, token: token)
+  vault_base_path = 'placid-fish'
+
+  puts 'Enter value for clojars-deploy-username:'
+  deploy_username = STDIN.gets.chomp
+
+  vault_client.kv('kv').write("#{vault_base_path}/clojars-deploy-username", value: deploy_username)
+
+  puts 'Enter value for clojars-deploy-token:'
+  deploy_token = STDIN.gets.chomp
+
+  vault_client.kv('kv').write("#{vault_base_path}/clojars-deploy-token", value: deploy_token)
+
+  puts "Enter path to file for clojars-deploy-gpg:"
+  path = STDIN.gets.chomp
+  content = File.read(path)
+  if content.empty?
+    raise :file_is_empty
+  end
+
+  vault_client.kv('kv').write("#{vault_base_path}/clojars-deploy-gpg", value: Base64.strict_encode64(content))
 end

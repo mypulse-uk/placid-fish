@@ -9,6 +9,12 @@ PROJECT_DIR="$( cd "$SCRIPT_DIR/../../.." && pwd )"
 
 cd "$PROJECT_DIR"
 
+git pull
+
 mkdir -p ~/.lein
-cp config/secrets/clojars/credentials.clj.gpg ~/.lein/credentials.clj.gpg
+
+./go library:prepare
+
 chmod 0600 ~/.lein/credentials.clj.gpg
+
+./go library:publish:release
