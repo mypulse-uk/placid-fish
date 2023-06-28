@@ -1,4 +1,6 @@
-(defproject ai.mypulse/placid-fish (System/getenv "VERSION")
+(defproject ai.mypulse/placid-fish (or
+                                     (System/getenv "VERSION")
+                                     "2.0.0")
   :description "Safe url assertions for test classes that uses Exploding Fish under the hood"
   :url "https://github.com/Global-Online-Health/placid-fish"
 
