@@ -11,5 +11,7 @@ cd "$PROJECT_DIR"
 
 ls
 pwd
+echo $PROJECT_DIR
+echo $SCRIPT_DIR
 
 ./go library:check
