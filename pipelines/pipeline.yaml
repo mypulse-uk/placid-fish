@@ -17,8 +17,8 @@ resources:
   - name: application-builder-image
     type: docker-image
     source:
-      repository: ((library_application_builder_image_repository_url))
-      tag: ((library_application_builder_image_tag))
+      repository: ((application_builder_image_repository_url))
+      tag: ((application_builder_image_tag))
 
   - name: notify-success
     type: slack-notification
@@ -79,9 +79,6 @@ jobs:
         image: application-builder-image
         params:
           TEST_TYPE: unit
-          PROVISIONING_ROLE_ARN: ((ci_provisioning_role_arn))
-          DEPLOYMENT_TYPE: ((ci_deployment_type))
-          DEPLOYMENT_LABEL: ((ci_deployment_label))
           VAULT_APPROLE_ROLE_ID: ((ci_secrets_role_id))
           VAULT_APPROLE_SECRET_ID: ((ci_secrets_secret_id))
 
