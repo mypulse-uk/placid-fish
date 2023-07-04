@@ -15,7 +15,7 @@ pwd
 
 mkdir -p ~/.lein
 
-./go library:prepare
+./go library:publish:prepare
 
 chmod 0600 ~/.lein/credentials.clj.gpg
 
