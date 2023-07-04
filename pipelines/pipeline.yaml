@@ -78,7 +78,6 @@ jobs:
         file: source/pipelines/test/task.yaml
         image: application-builder-image
         params:
-          TEST_TYPE: unit
           VAULT_APPROLE_ROLE_ID: ((ci_secrets_role_id))
           VAULT_APPROLE_SECRET_ID: ((ci_secrets_secret_id))
 
@@ -88,12 +87,14 @@ jobs:
     on_abort: *on_abort
 
   - name: publish-library
+    serial: true
     plan:
       - in_parallel:
         - get: source
           trigger: true
           passed:
             - test
+        - get: application-builder-image
       - task: publish-library
         file: source/pipelines/publish-library/task.yaml
         image: application-builder-image
