@@ -98,6 +98,8 @@ jobs:
       - task: publish-library
         file: source/pipelines/publish-library/task.yaml
         image: application-builder-image
+        params:
+          CLOJARS_GPG_KEY: ((clojars_gpg_key))
 
     on_success: *on_success
     on_failure: *on_failure

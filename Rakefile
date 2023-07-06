@@ -113,10 +113,10 @@ def provision_secrets(vault_address)
   vault_client = Vault::Client.new(address: vault_address, token: token)
   vault_base_path = 'placid-fish'
 
-  puts 'Enter value for clojars-deploy-username:'
+  puts 'Enter value for clojars_deploy_username:'
   deploy_username = STDIN.gets.chomp
 
-  vault_client.kv('kv').write("#{vault_base_path}/clojars-deploy-username", value: deploy_username)
+  vault_client.kv('kv').write("#{vault_base_path}/clojars_deploy_username", value: deploy_username)
 
   puts 'Enter value for clojars-deploy-token:'
   deploy_token = STDIN.gets.chomp

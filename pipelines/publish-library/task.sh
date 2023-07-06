@@ -15,7 +15,9 @@ pwd
 
 mkdir -p ~/.lein
 
-./go library:publish:prepare
+echo $CLOJARS_GPG_KEY
+
+echo $CLOJARS_GPG_KEY | base64 --decode > ~/.lein/credentials.clj.gpg
 
 chmod 0600 ~/.lein/credentials.clj.gpg
 
