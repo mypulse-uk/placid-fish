@@ -10,10 +10,12 @@ PROJECT_DIR="$( cd "$SCRIPT_DIR/../../.." && pwd )"
 cd "$PROJECT_DIR"
 cd source
 
-export VERSION="2.0.0"
+export VERSION="2.0.1"
 
 ls
 pwd
+
+echo $VERSION
 
 mkdir -p ~/.lein
 
