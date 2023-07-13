@@ -10,6 +10,8 @@ PROJECT_DIR="$( cd "$SCRIPT_DIR/../../.." && pwd )"
 cd "$PROJECT_DIR"
 cd source
 
+export VERSION="2.0.0"
+
 ls
 pwd
 
