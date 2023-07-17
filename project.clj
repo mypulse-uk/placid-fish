@@ -46,5 +46,6 @@
   :bikeshed {:max-line-length 120}
 
   :deploy-repositories
-  {"releases" {:url "https://repo.clojars.org" :creds :gpg}
-   "snapshots" {:url "https://repo.clojars.org" :creds :gpg}})
+  {"releases" {:url "https://repo.clojars.org"
+               :username :env/clojars_deploy_username
+               :password :env/clojars_deploy_token}})
