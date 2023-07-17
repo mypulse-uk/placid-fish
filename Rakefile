@@ -62,7 +62,13 @@ namespace :library do
 
     RakeLeiningen.define_release_task(
       name: :release,
-      profile: 'release')
+      profile: 'release')  do |t|
+          t.environment = {
+              'VERSION' => ENV['VERSION'],
+              'CLOJARS_DEPLOY_USERNAME' => ENV['CLOJARS_DEPLOY_USERNAME'],
+              'CLOJARS_DEPLOY_TOKEN' => ENV['CLOJARS_DEPLOY_TOKEN']
+          }
+          end
   end
 
   desc 'Lint all src files'
