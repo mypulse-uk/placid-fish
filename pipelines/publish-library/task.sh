@@ -19,10 +19,10 @@ echo $VERSION
 
 mkdir -p ~/.lein
 
-echo $CLOJARS_GPG_KEY
+echo $CLOJARS_GPG_KEY | base64 --decode > /root/.lein/credentials.clj.gpg
 
-echo $CLOJARS_GPG_KEY | base64 --decode > ~/.lein/credentials.clj.gpg
+chmod 0600 /root/.lein/credentials.clj.gpg
 
-chmod 0600 ~/.lein/credentials.clj.gpg
+cat /root/.lein/credentials.clj.gpg
 
 ./go library:publish:release
