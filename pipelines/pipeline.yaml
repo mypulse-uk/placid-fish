@@ -99,7 +99,8 @@ jobs:
         file: source/pipelines/publish-library/task.yaml
         image: application-builder-image
         params:
-          CLOJARS_GPG_KEY: ((clojars_gpg_key))
+          CLOJARS_DEPLOY_USERNAME: ((clojars_deploy_username))
+          CLOJARS_DEPLOY_TOKEN: ((clojars_deploy_token))
 
     on_success: *on_success
     on_failure: *on_failure
