@@ -47,6 +47,6 @@
 
   :deploy-repositories
   {"releases" {:url "https://repo.clojars.org"
-               :username :env/clojars_deploy_username
-               :password :env/clojars_deploy_token
+               :username :env/CLOJARS_DEPLOY_USERNAME
+               :password :env/CLOJARS_DEPLOY_TOKEN
                :sign-releases false}})

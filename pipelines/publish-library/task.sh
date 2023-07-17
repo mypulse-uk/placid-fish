@@ -17,6 +17,8 @@ pwd
 
 echo $VERSION
 
+echo "$CLOJARS_DEPLOY_USERNAME"
+
 mkdir -p ~/.lein
 
 ./go library:publish:release
