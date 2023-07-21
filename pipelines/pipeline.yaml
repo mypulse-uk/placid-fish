@@ -30,6 +30,15 @@ resources:
     source:
       url: ((slack_development_webhook_url))
 
+  - name: version
+    type: semver
+    source:
+      driver: git
+      uri: git@github.com:mypulse-uk/placid-fish.git
+      branch: master
+      file: version
+      private_key: ((git_ssh_key))
+
 jobs:
   - name: build
     plan:
@@ -90,11 +99,15 @@ jobs:
     serial: true
     plan:
       - in_parallel:
+        - get: version
+          params: {bump: minor}
         - get: source
           trigger: true
           passed:
             - test
         - get: application-builder-image
+        - put: version
+          params: {file: version}
       - task: publish-library
         file: source/pipelines/publish-library/task.yaml
         image: application-builder-image
