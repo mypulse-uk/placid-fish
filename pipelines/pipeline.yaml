@@ -35,7 +35,7 @@ resources:
     source:
       driver: git
       uri: git@github.com:mypulse-uk/placid-fish.git
-      branch: master
+      branch: version
       file: version
       private_key: ((git_ssh_key))
 
@@ -98,16 +98,15 @@ jobs:
   - name: publish-library
     serial: true
     plan:
-      - in_parallel:
-        - get: version
-          params: {bump: minor}
-        - get: source
-          trigger: true
-          passed:
-            - test
-        - get: application-builder-image
-        - put: version
-          params: {file: version}
+      - get: version
+        params: {bump: patch}
+      - get: source
+        trigger: true
+        passed:
+          - test
+      - get: application-builder-image
+      - put: version
+        params: {file: version/version}
       - task: publish-library
         file: source/pipelines/publish-library/task.yaml
         image: application-builder-image

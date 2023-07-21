@@ -10,14 +10,8 @@ PROJECT_DIR="$( cd "$SCRIPT_DIR/../../.." && pwd )"
 cd "$PROJECT_DIR"
 cd source
 
-export VERSION="2.0.1"
-
 ls
 pwd
-
-echo $VERSION
-
-echo "$CLOJARS_DEPLOY_USERNAME"
 
 mkdir -p ~/.lein
 
