@@ -10,7 +10,7 @@ PROJECT_DIR="$( cd "$SCRIPT_DIR/../../.." && pwd )"
 ls
 pwd
 
-export VERSION="$( cat version/version )"
+export VERSION="$( cat ../version/version )"
 
 echo "VERSION: $VERSION"
 
